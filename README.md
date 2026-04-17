@@ -42,5 +42,5 @@ curl -X POST http://localhost:5000/predict \
 ## Example Response
 
 ```json
-{ "predicted_test_result": "Abnormal", "confidence": 0.35}
+{ "predicted_test_result": "Abnormal"}
 ```
