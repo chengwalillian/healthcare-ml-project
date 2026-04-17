@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Health Predictor</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #f2f2f2;
+            padding: 20px;
+        }
+
+        .box {
+            max-width: 500px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border: 1px solid #ccc;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 6px;
+            margin-top: 5px;
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 8px;
+            width: 100%;
+            background: black;
+            color: white;
+            border: none;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            background: #eee;
+        }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <h2>Health Predictor</h2>
+
+    <form method="POST">
+        <input type="number" name="age" placeholder="Age" required>
+
+        <select name="gender">
+            <option>Male</option>
+            <option>Female</option>
+        </select>
+
+        <select name="blood_type">
+            <option>A+</option><option>A-</option>
+            <option>B+</option><option>B-</option>
+            <option>AB+</option><option>AB-</option>
+            <option>O+</option><option>O-</option>
+        </select>
+
+        <select name="admission_type">
+            <option>Emergency</option>
+            <option>Elective</option>
+            <option>Urgent</option>
+        </select>
+
+        <input type="number" name="billing_amount" placeholder="Billing">
+
+        <select name="insurance_provider">
+            <option>Blue Cross</option>
+            <option>Medicare</option>
+            <option>Aetna</option>
+            <option>UnitedHealthcare</option>
+            <option>Cigna</option>
+        </select>
+
+        <select name="medical_condition">
+            <option>Cancer</option>
+            <option>Obesity</option>
+            <option>Diabetes</option>
+            <option>Asthma</option>
+            <option>Hypertension</option>
+            <option>Arthritis</option>
+        </select>
+
+        <select name="medication">
+            <option>Paracetamol</option>
+            <option>Ibuprofen</option>
+            <option>Aspirin</option>
+            <option>Penicillin</option>
+            <option>Lipitor</option>
+        </select>
+
+        <button type="submit">Predict</button>
+    </form>
+
+    {% if result %}
+    <div class="result">
+        <h3>Result: {{ result }}</h3>
+    </div>
+    {% endif %}
+
+</div>
+
+</body>
+</html>
