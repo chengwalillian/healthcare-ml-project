@@ -70,6 +70,7 @@ services:
 
 volumes:
   postgres_data:
+    name: "${COMPOSE_PROJECT_NAME:-health}_postgres_data"
 
 networks:
   dokploy-network:
