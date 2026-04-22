@@ -20,6 +20,7 @@ RUN uv pip install --system -e . && \
 
 # Copy application code
 COPY . .
+RUN chmod +x /app/scripts/entrypoint.sh
 
 ENV PYTHONPATH=/app
 ENV AIRFLOW_HOME=/app/airflow
