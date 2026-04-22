@@ -5,7 +5,7 @@ set -e
 mkdir -p /app/airflow/logs /app/airflow/plugins
 
 echo "Running Airflow DB migrations..."
-airflow db migrate || true  # Skip if already migrated
+airflow db migrate || true
 
 echo "Creating admin user if not exists..."
 airflow users create \

@@ -3,7 +3,7 @@ from database.db_connection import Base
 
 
 class Health(Base):
-    __tablename__ = "health"
+    __tablename__ = "patients"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     age = Column(Integer, nullable=False)
