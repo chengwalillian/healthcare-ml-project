@@ -1,38 +1,16 @@
 services:
-  postgres:
-    image: postgres:15-alpine
-    environment:
-      POSTGRES_USER: health_app
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: health
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh:ro
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U health_app -d health"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
-      start_period: 10s
-    restart: always
-    networks:
-      - dokploy-network
-
   app:
     build: .
     ports:
       - "5009:5000"
     environment:
-      DB_URL: postgresql://health_app:password@postgres:5432/health
+      DB_URL: ${NEON_DB_URL}  # postgresql://user:pass@host.neon.tech/db?sslmode=require
       MODEL_PIPELINE_PATH: /app/models/healthcare_model_pipeline.pkl
       MODEL_PACKAGE_PATH: /app/models/healthcare_model.pkl
       RAW_PATH: /app/scripts/data/raw/healthcare_dataset.csv
       CLEANED_PATH: /app/scripts/data/cleaned_healthcare.csv
       KAGGLE_KEY: ${KAGGLE_KEY:-}
       FLASK_DEBUG: "false"
-    depends_on:
-      postgres:
-        condition: service_healthy
     entrypoint: ["/app/scripts/entrypoint.sh"]
     restart: always
     networks:
@@ -45,7 +23,7 @@ services:
     environment:
       AIRFLOW_HOME: /app/airflow
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
-      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://health_app:password@postgres:5432/health
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: ${NEON_DB_URL_AIRFLOW:-${NEON_DB_URL}}  # can be same or separate Neon DB
       AIRFLOW__CORE__LOAD_EXAMPLES: "false"
       PYTHONPATH: /app
       MODEL_PIPELINE_PATH: /app/models/healthcare_model_pipeline.pkl
@@ -55,22 +33,15 @@ services:
       KAGGLE_KEY: ${KAGGLE_KEY:-}
     command: >
       bash -c "
-        echo 'Waiting for postgres...' &&
+        echo 'Waiting for Neon DB...' &&
         sleep 5 &&
         airflow db migrate &&
         airflow users create --username admin --password admin --firstname Admin --lastname User --role Admin --email admin@example.com || true &&
         exec airflow standalone
       "
-    depends_on:
-      postgres:
-        condition: service_healthy
     restart: always
-    networks:
-      - dokploy-network
-
-volumes:
-  postgres_data:
-    name: "${COMPOSE_PROJECT_NAME:-health}_postgres_data"
+    networks: 
+       - dokploy-network
 
 networks:
   dokploy-network:
