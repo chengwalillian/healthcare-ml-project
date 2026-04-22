@@ -1,16 +1,9 @@
 #!/bin/bash
 set -e
 
-echo "Waiting for postgres..."
-python -c "
-import socket, time
-while True:
-    try:
-        socket.create_connection(('postgres', 5432), timeout=1)
-        break
-    except OSError:
-        time.sleep(0.5)
-"
+echo "Waiting for Neon database..."
+# Simple wait — Neon is always up, but migrations need to run first
+sleep 3
 
 echo "Checking if patients table needs seeding..."
 python -c "
